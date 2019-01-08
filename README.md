@@ -18,3 +18,8 @@ Render your mkdocs site with it adding this to your `mkdocs.yml` file:
 theme: databio
 ```
 
+
+## Example
+
+Copy/paste the contents of the `example` folder into your root repository directory.
+
