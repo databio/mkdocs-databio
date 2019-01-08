@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{#
+The entry point for the MkDocs Theme.
+ 
+Any theme customizations should override this file to redefine blocks defined in
+the various templates. The custom theme should only need to define a main.html
+which `{% extends "base.html" %}` and defines various blocks which will replace
+the blocks defined in base.html and its included child templates.
+#}
+
+{%- block site_name %}
+{% if config.site_logo %}
+<a class="navbar-brand" href="{{ nav.homepage.url|url }}"><img src="{{ config.site_url + config.site_logo }}" class="navlogo"></a>
+{% else %}
+<a class="navbar-brand" href="{{ nav.homepage.url|url }}">{{ config.site_name }}</a>
+{% endif %}
+{%- endblock %}
+
+
+  {%- block styles %}
+    <link href="{{ 'css/bootstrap-custom.min.css'|url }}" rel="stylesheet">
+    <link href="{{ 'css/font-awesome.min.css'|url }}" rel="stylesheet">
+    <link href="{{ 'css/base.css'|url }}" rel="stylesheet">
+    {%- if config.theme.highlightjs %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/{{ config.theme.hljs_style }}.min.css">
+    {%- endif %}
+    {%- for path in config['extra_css'] %}
+    <link href="{{ path|url }}" rel="stylesheet">
+    {%- endfor %}
+    <link href="{{ 'css/extra.css'|url }}" rel="stylesheet">
+  {%- endblock %}
+
+
+
+
+
+{%- block site_nav %}
+{%- if nav|length>0 %}
+{% if config.navbar %}    
+    <!-- Main navigation -->
+    <ul class="nav navbar-nav">
+{% set navbar = config.navbar %}
+    {%- for nav_item in navbar.left %}
+    {%- if nav_item.children %}
+        <li class="dropdown{% if nav_item.active %} active{% endif %}">
+            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">{{ nav_item.title }} <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+            {%- for nav_item in nav_item.children %}
+                {% include "nav-sub.html" %}
+            {%- endfor %}
+            </ul>
+        </li>
+    {%- else %}
+    	<li class="navitem{% if nav_item.active %} active{% endif %}">
+            <a href="{{ nav_item.href|url }}" class="nav-link"><span class="fa {{ nav_item.icon }}"></span>&nbsp;{{ nav_item.text }}</a>
+        </li>    {%- endif %}
+    {%- endfor %}
+    </ul>
+{%- endif %}
+{%- endif %}
+{%- endblock %}
+
+
+  {%- block search_button %}
+      <li class="nav-item">
+        <a href="http://databio.org" class="nav-link">
+            <i class="fa fa-database"></i> Databio.org
+        </a>
+    </li>
+    {%- if 'search' in config['plugins'] %}
+    <li class="nav-item">
+        <a href="#" class="nav-link" data-toggle="modal" data-target="#mkdocs_search_modal">
+            <i class="fa fa-search"></i> Search
+        </a>
+    </li>
+    {%- endif %}
+  {%- endblock %}
+
+
+
+{%- block footer %}
+<hr>
+            {%- if page and page.edit_url %}
+                
+                    <a href="{{ page.edit_url }}" class="nav-link">
+                        {%- if config.repo_name == 'GitHub' -%}
+                            <i class="fa fa-github"></i> Edit this page on {{ config.repo_name }}
+                        {%- elif config.repo_name == 'Bitbucket' -%}
+                            <i class="fa fa-bitbucket"></i> Edit on {{ config.repo_name }}
+                        {%- elif config.repo_name == 'GitLab' -%}
+                            <i class="fa fa-gitlab"></i> Edit on {{ config.repo_name }}
+                        {%- else -%}
+                        Edit on {{ config.repo_name }}
+                        {%- endif -%}
+                    </a>
+                
+            {%- elif config.repo_url %}
+                
+                    <a href="{{ config.repo_url }}" class="nav-link">
+                        {%- if config.repo_name == 'GitHub' -%}
+                            <i class="fa fa-github"></i> {{ config.repo_name }}
+                        {%- elif config.repo_name == 'Bitbucket' -%}
+                            <i class="fa fa-bitbucket"></i> {{ config.repo_name }}
+                        {%- elif config.repo_name == 'GitLab' -%}
+                            <i class="fa fa-gitlab"></i> {{ config.repo_name }}
+                        {%- else -%}
+                        {{ config.repo_name }}
+                        {%- endif -%}
+                    </a>
+                
+            {%- endif %}
+{%- if config.copyright %}
+    <p>{{ config.copyright }}</p>
+{%- endif %}
+{%- endblock %}
+
+
+
+{%- block repo %}
+{%- endblock %}

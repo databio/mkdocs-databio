@@ -1,0 +1,82 @@
+.navhead {
+	color: #999;
+	text-transform:uppercase;
+	font-weight: bold;
+	padding: 0px 0px;
+	margin-bottom: 0px;
+	margin-top: 7px;
+}
+
+/* fontawesome icons in the expanding TOC list */
+.level3 .fa {
+	color: #999;
+}
+
+.navlogo {
+	height:40px;
+	margin-top:-10px;
+	margin-bottom:-10px
+}
+
+.image {
+	text-align: center;
+	font-style: italic;
+}
+
+.navbar-default {
+	background-color: #333;
+	background-image: linear-gradient(#666,#444 60%,#222);
+}
+
+.level1 {
+	list-style: none;
+	display: block;
+	padding-left: 0px;
+    padding-top:    0px;
+    padding-bottom: 0px;
+    border-radius: 5px;
+    width: 100%;
+    font-size: 125%;
+}
+
+.level3 {
+	font-size: 90%;
+	padding-left: 10px;
+	list-style: none;
+	padding-left: 10px;
+}
+
+.level2 {
+	list-style: none;
+	padding-left: 0px;
+}
+
+.level1 .nav > li > a {
+    display: block;
+    padding: 3px 0px;
+    z-index: 1;
+}
+.level1 .nav > li > a:hover,
+.level1 .nav > li > a:focus {
+    text-decoration: none;
+    border-right: 1px solid;
+}
+.level1 .nav > li > a.active,
+.level1 .nav > li > a.active:hover,
+.level1 .nav > li > a.active:focus {
+    font-weight: bold;
+    background-color: transparent;
+    border-right: 1px solid;
+}
+
+/* Nav: second level (shown on .active) */
+.level1 .nav .nav {
+    display: none; /* Hide by default, but at >768px, show it */
+    margin-bottom: 8px;
+}
+.level1 .nav .nav > li > a {
+    padding-top:    3px;
+    padding-bottom: 3px;
+    padding-left: 3px;
+    font-size: 90%;
+}
