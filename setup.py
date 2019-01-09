@@ -19,7 +19,7 @@ setup(
             'databio = mkdocs_databio',
         ],
         'mkdocs.plugins': [
-            'dbp = mkdocs_plugin.plugin:AutoDocumenter',
+            'databio = mkdocs_plugin.plugin:AutoDocumenter',
         ]
     },
     zip_safe=False
