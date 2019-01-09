@@ -90,3 +90,6 @@ class AutoDocumenter(BasePlugin):
             # print(cmd)
             subprocess.call(cmd, shell=True)
 
+
+        # Next, run the usage autodocumentation.
+        
