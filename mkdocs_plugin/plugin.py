@@ -14,7 +14,6 @@ class AutoDocumenter(BasePlugin):
     Populate automatic documentation markdown
     """
     config_scheme = (
-        ('auto', mkdocs.config.config_options.Type(mkdocs.utils.string_types, default=None)),
         ('jupyter_source', mkdocs.config.config_options.Type(mkdocs.utils.string_types, default="docs_jupyter")),
         ('jupyter_build', mkdocs.config.config_options.Type(mkdocs.utils.string_types, default="docs_jupyter/build")),
         ('autodoc_modules', mkdocs.config.config_options.Type(list, default=None)),
