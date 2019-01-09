@@ -17,6 +17,9 @@ setup(
     entry_points={
         'mkdocs.themes': [
             'databio = mkdocs_databio',
+        ],
+        'mkdocs.plugins': [
+            'dbp = mkdocs_plugin.plugin:AutoDocumenter',
         ]
     },
     zip_safe=False

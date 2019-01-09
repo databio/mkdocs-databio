@@ -7,7 +7,7 @@ theme: databio
 nav:
   - Getting started:
     - Introduction: README.md
-    
+
   - How-to Guides:
     - How to configure: configure.md
 
