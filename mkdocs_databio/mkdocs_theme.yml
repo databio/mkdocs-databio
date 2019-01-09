@@ -1,4 +1,4 @@
-# Config options for 'mkdocs' theme
+# Config options for 'databio' theme
 
 extends: mkdocs
 

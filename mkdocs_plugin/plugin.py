@@ -5,16 +5,7 @@ import mkdocs
 import os
 import glob
 import subprocess
-
 import time
-
-CONFIG_KEYS = [
-    'site_name',
-    'site_author',
-    'site_url',
-    'repo_url',
-    'repo_name'
-]
 
 timer = 0
 
@@ -78,7 +69,7 @@ class AutoDocumenter(BasePlugin):
         Convert jupyter notebooks into markdown so they can be rendered by
         mkdocs.
         """
-        
+
         global timer
         # time.sleep(1)
         print("Running AutoDocumenter plugin")
