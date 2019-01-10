@@ -33,7 +33,7 @@ Then, there are a bunch of config options:
 ```{yaml}
 plugins:
   - databio:
-  	  jupyter_source: "docs_jupyter"
+      jupyter_source: "docs_jupyter"
       jupyter_build: "docs_jupyter/build"
       autodoc_modules: null
       autodoc_build: "docs_build"
