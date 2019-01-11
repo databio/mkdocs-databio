@@ -1,4 +1,5 @@
 recursive-include mkdocs_databio *.ico *.js *.css *.png *.html *.eot *.svg *.ttf *.woff *.woff2 *.yml
 include mkdocs_plugin/templates/*.tpl
+include LICENSE
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]

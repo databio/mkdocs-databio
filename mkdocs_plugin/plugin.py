@@ -19,7 +19,7 @@ class AutoDocumenter(BasePlugin):
         ('autodoc_modules', mkdocs.config.config_options.Type(list, default=None)),
         ('autodoc_build', mkdocs.config.config_options.Type(mkdocs.utils.string_types, default="docs_build")),
         ('usage_template', mkdocs.config.config_options.Type(mkdocs.utils.string_types, default="docs/usage_template.md")),
-        ('usage_cmds', mkdocs.config.config_options.Type(mkdocs.utils.string_types, default=[])),
+        ('usage_cmds', mkdocs.config.config_options.Type((list, mkdocs.utils.string_types), default=[])),
     )
 
     def on_files(self, files, config):
