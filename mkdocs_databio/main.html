@@ -80,7 +80,7 @@ the blocks defined in base.html and its included child templates.
 
 
 {%- block footer %}
-<hr>
+<hr style="width: 30%">
             {%- if page and page.edit_url %}
                 
                     <a href="{{ page.edit_url }}" class="nav-link">
@@ -112,6 +112,8 @@ the blocks defined in base.html and its included child templates.
             {%- endif %}
 {%- if config.copyright %}
     <p>{{ config.copyright }}</p>
+    {%- else %}
+    <p><a href="http://databio.org/">Sheffield Computational Biology Lab</a></p>
 {%- endif %}
 {%- endblock %}
 
