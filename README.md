@@ -10,6 +10,17 @@ Install it with:
 pip install --user --upgrade https://github.com/databio/mkdocs-databio/zipball/master
 ```
 
+## Hello World example
+
+You can run the example in the [example](/example) folder by running this after cloning this repo:
+
+```
+cd example
+mkdocs serve
+```
+
+You can use this as a template; copy/paste the contents of the `example` folder into your root repository directory and then edit away!
+
 ## Enabling the theme
 
 The theme refers to the look and feel of the site. It contains the software that renders the hierarchial sidebar, the different navbar links, etc. Use it for your site by adding this to your `mkdocs.yml` file:
@@ -43,9 +54,6 @@ plugins:
 
 ```
 
-## Example
-
-Copy/paste the contents of the `example` folder into your root repository directory.
 
 ## How to use it
 

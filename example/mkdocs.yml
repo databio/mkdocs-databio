@@ -7,10 +7,8 @@ theme: databio
 nav:
   - Getting started:
     - Introduction: README.md
-
   - How-to Guides:
     - How to configure: configure.md
-
   - Reference:
     - Features: features.md
     - Usage: usage.md
@@ -20,6 +18,7 @@ nav:
     - Changelog: changelog.md
 
 plugins: 
+  - databio
   - search
 
 navbar:
