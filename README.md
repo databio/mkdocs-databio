@@ -1,6 +1,6 @@
 # MkDocs databio theme and plugin
 
-This repository contains the [mkdocs](http://mkdocs.org) theme and plugin for the Sheffield lab. Installing this will give you access to both.
+This repository contains the [mkdocs](http://mkdocs.org) theme and plugin for the [Sheffield lab](http://databio.org/). Installing this will give you access to both.
 
 ## Install
 
@@ -12,7 +12,7 @@ pip install --user --upgrade https://github.com/databio/mkdocs-databio/zipball/m
 
 ## Enabling the theme
 
-The theme refers to the look and feel of the site. It contains the software the renders the hierarchial sidebar, the different navbar links, etc. Render your mkdocs site with it adding this to your `mkdocs.yml` file:
+The theme refers to the look and feel of the site. It contains the software that renders the hierarchial sidebar, the different navbar links, etc. Use it for your site by adding this to your `mkdocs.yml` file:
 
 
 ```{yaml}
@@ -49,4 +49,4 @@ Copy/paste the contents of the `example` folder into your root repository direct
 
 ## How to use it
 
-Put all your `.md` files into the `docs` folder, and put all your `.ipynb` files into the `docs_jupyter` folder. With the theme and plugin enabled, you can now refer to any of these files with links. The `ipynb` files will be converted into `md` files with the same name
+Put all your `.md` files into the `docs` folder, and put all your `.ipynb` files into the `docs_jupyter` folder. With the theme and plugin enabled, you can now refer to any of these files with links. The `ipynb` files will be converted into `md` files with the same name.
