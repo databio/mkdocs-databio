@@ -14,14 +14,11 @@
                         <ul class="level3">
                         {% if page.toc|length > 0 %}
                         {%- for toc_item in page.toc %}
-                            <!-- <li class=""><a href="{{ toc_item.url }}">{{ toc_item.title }}</a></li> -->
-                            <!-- <ul class="level3"> -->
                             {%- for toc_item in toc_item.children %}
                                 <li class="nav-item">
                                     <span class="fa fa-chevron-right" style="font-size:80%"></span> <a href="{{ toc_item.url }}" class="nav-link{% if toc_item.active %} active{% endif %}">{{ toc_item.title }}</a>
                                 </li>
                             {%- endfor %}
-                            <!-- </ul> -->
                         {%- endfor %}
                         {% endif %}
                         </ul>
@@ -38,18 +35,4 @@
     </ul>
 
     </div>
-<!--     <div>
-
-                        <ul class="nav flex-column bs-sidenav">
-                        {%- for toc_item in page.toc %}
-                            <li class="nav-item main"><a href="{{ toc_item.url }}">{{ toc_item.title }}</a></li>
-                            {%- for toc_item in toc_item.children %}
-                                <li class="nav-item">
-                                    <a href="{{ toc_item.url }}" class="nav-link{% if toc_item.active %} active{% endif %}">{{ toc_item.title }}</a>
-                                </li>
-                            {%- endfor %}
-                        {%- endfor %}
-                        </ul>
-</div>
- -->
 </div>
