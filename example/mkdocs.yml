@@ -19,19 +19,18 @@ nav:
     - Contributing: contributing.md
     - Changelog: changelog.md
 
+plugins: 
+  - search
+
 navbar:
   left:
-  # - text: Episb web app
-  #   icon: fa-play
-  #   href: http://episb.org
+  - text: Episb web app
+    icon: fa-play
+    href: http://episb.org
   # - text: Documentation
   #   icon: fa-pencil
   #   href: reference/index.html
-  - text: GitHub
-    icon: fa-github fa-lg
-    href: https://github.com/databio/episb-hub
   right:
-  - text: Databio.org
-    href: http://databio.org
   - text: Software & Data
+    icon: fa-code fa-lg
     href: http://databio.org/software/
