@@ -5,6 +5,7 @@ import sys
 VERSION = '1.0.1'
 
 # 2to3
+extra = {}
 if sys.version_info >= (3, ):
     extra["use_2to3"] = True
 
