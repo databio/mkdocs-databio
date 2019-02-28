@@ -177,6 +177,15 @@
 }
 
 
+/* header images */
+
+.img-header, .col-md-9 .img-header {
+  max-height:55px;
+  margin-top:-15px;
+  margin-bottom:-10px;
+  border:0px;
+}
+
 
 
 navbar-collapse {
