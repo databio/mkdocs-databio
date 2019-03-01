@@ -46,8 +46,9 @@ plugins:
   - databio:
       jupyter_source: "docs_jupyter"
       jupyter_build: "docs_jupyter/build"
-      autodoc_modules: null
+      autodoc_package: null
       autodoc_build: "docs_build"
+      docstring_style: "rst"
       usage_template: "docs/usage_template.md"
       usage_cmds:
         -"$CODEBASE/AIList/bin/AIList --help"
@@ -58,3 +59,8 @@ plugins:
 ## How to use it
 
 Put all your `.md` files into the `docs` folder, and put all your `.ipynb` files into the `docs_jupyter` folder. With the theme and plugin enabled, you can now refer to any of these files with links. The `ipynb` files will be converted into `md` files with the same name.
+
+
+## Contributing
+If you'd like to contribute to development but are unfamiliar with `MkDocs` plugins, you can refer to the ["Developing Plugins" section](https://www.mkdocs.org/user-guide/plugins/#developing-plugins) of the `MkDocs` user guide.
+
