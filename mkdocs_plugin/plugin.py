@@ -13,6 +13,7 @@ import mkdocs
 from mkdocs.plugins import BasePlugin
 from mkdocs.commands.build import build
 
+from oradocle import run_oradoc
 
 TIMER = 0
 
@@ -84,8 +85,8 @@ class AutoDocumenter(BasePlugin):
             TIMER = time.time()
 
         template = os.path.join(os.path.dirname(__file__), "templates/jupyter_markdown.tpl")
-        inpath = os.path.join(os.path.dirname(config["config_file_path"]), self.config["jupyter_source"])
-        outpath = os.path.join(os.path.dirname(config["config_file_path"]), self.config["jupyter_build"])
+        inpath = get_path_relative_to_config(config, self.config["jupyter_source"])
+        outpath = get_path_relative_to_config(config, self.config["jupyter_build"])
 
         for nb in glob.glob(inpath + "/*.ipynb"):
             cmd = "jupyter nbconvert --to markdown" + \
@@ -95,8 +96,23 @@ class AutoDocumenter(BasePlugin):
             # print(cmd)
             subprocess.call(cmd, shell=True)
 
-        # Create API documentation
-        api_pkg = config["autodoc_package"]
-        api_doc_target = os.path.join(config["autodoc_build"], api_pkg + ".md")
-        print("Writing API documentation for package {} to {}".format(api_pkg, api_doc_target))
-        subprocess.call("oradoc {} --parse {} -O {}".format(config["docstring_style"], api_pkg, api_doc_target))
+        # If possible, create API documentation.
+        try:
+            api_pkg = self.config["autodoc_package"]
+        except KeyError:
+            print("No package name declared for API autodocumentation (use 'autodoc_package')")
+        else:
+            docs_file = get_path_relative_to_config(config, os.path.join(self.config["autodoc_build"], api_pkg + ".md"))
+            print("Writing API documentation for package {} to {}".format(api_pkg, docs_file))
+            run_oradoc(api_pkg, self.config["docstring_style"], docs_file)
+
+
+def get_path_relative_to_config(cfg, relpath):
+    """
+    Join relative path to config's parent.
+
+    :param Mapping cfg: config key-value mapping
+    :param relpath: relative path to join
+    :return str: path relative to the given config's config file
+    """
+    return os.path.join(os.path.dirname(cfg["config_file_path"]), relpath)
