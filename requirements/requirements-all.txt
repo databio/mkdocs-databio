@@ -1,0 +1,2 @@
+oradocle
+mkdocs>=1.0
