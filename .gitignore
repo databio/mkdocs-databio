@@ -4,3 +4,5 @@ build/
 mkdocs_bootstrap.egg-info/
 site/
 *.egg-info*
+.idea/
+
