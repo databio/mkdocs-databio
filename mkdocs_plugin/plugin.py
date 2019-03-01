@@ -1,25 +1,32 @@
-from mkdocs.plugins import BasePlugin
-from mkdocs.commands.build import build
+"""
+Databio group plugin for MkDocs
 
-import mkdocs
+Group software page: http://databio.org/software/
+"""
+
 import os
 import glob
 import subprocess
 import time
 
-timer = 0
+import mkdocs
+from mkdocs.plugins import BasePlugin
+from mkdocs.commands.build import build
+
+
+TIMER = 0
+
 
 class AutoDocumenter(BasePlugin):
-    """
-    Populate automatic documentation markdown
-    """
+    """ Populate automatic documentation markdown. """
     config_scheme = (
-        ('jupyter_source', mkdocs.config.config_options.Type(mkdocs.utils.string_types, default="docs_jupyter")),
-        ('jupyter_build', mkdocs.config.config_options.Type(mkdocs.utils.string_types, default="docs_jupyter/build")),
-        ('autodoc_modules', mkdocs.config.config_options.Type(list, default=None)),
-        ('autodoc_build', mkdocs.config.config_options.Type(mkdocs.utils.string_types, default="docs_build")),
-        ('usage_template', mkdocs.config.config_options.Type(mkdocs.utils.string_types, default="docs/usage_template.md")),
-        ('usage_cmds', mkdocs.config.config_options.Type((list, mkdocs.utils.string_types), default=[])),
+        ("jupyter_source", mkdocs.config.config_options.Type(mkdocs.utils.string_types, default="docs_jupyter")),
+        ("jupyter_build", mkdocs.config.config_options.Type(mkdocs.utils.string_types, default="docs_jupyter/build")),
+        ("autodoc_package", mkdocs.config.config_options.Type(mkdocs.utils.string_types, default=None)),
+        ("docstring_style", mkdocs.config.config_options.Type(mkdocs.utils.string_types, default="rst")),
+        ("autodoc_build", mkdocs.config.config_options.Type(mkdocs.utils.string_types, default="docs_build")),
+        ("usage_template", mkdocs.config.config_options.Type(mkdocs.utils.string_types, default="docs/usage_template.md")),
+        ("usage_cmds", mkdocs.config.config_options.Type((list, mkdocs.utils.string_types), default=[])),
     )
 
     def on_files(self, files, config):
@@ -44,7 +51,6 @@ class AutoDocumenter(BasePlugin):
         #         out.append(i)
         return files
 
-
     def on_serve(self, server, config):
 
         # Add the jupyter source files to the watchlist, so that changes
@@ -62,21 +68,20 @@ class AutoDocumenter(BasePlugin):
 
         return server
 
-
     def on_pre_build(self, config):
         """
         Convert jupyter notebooks into markdown so they can be rendered by
         mkdocs.
         """
 
-        global timer
+        global TIMER
         # time.sleep(1)
         print("Running AutoDocumenter plugin")
-        print(timer, time.time())
-        if time.time() - timer < 3:
+        print(TIMER, time.time())
+        if time.time() - TIMER < 3:
             print("Too fast")
         else:
-            timer = time.time()
+            TIMER = time.time()
 
         template = os.path.join(os.path.dirname(__file__), "templates/jupyter_markdown.tpl")
         inpath = os.path.join(os.path.dirname(config["config_file_path"]), self.config["jupyter_source"])
@@ -90,6 +95,8 @@ class AutoDocumenter(BasePlugin):
             # print(cmd)
             subprocess.call(cmd, shell=True)
 
-
-        # Next, run the usage autodocumentation.
-        
+        # Create API documentation
+        api_pkg = config["autodoc_package"]
+        api_doc_target = os.path.join(config["autodoc_build"], api_pkg + ".md")
+        print("Writing API documentation for package {} to {}".format(api_pkg, api_doc_target))
+        subprocess.call("oradoc {} --parse {} -O {}".format(config["docstring_style"], api_pkg, api_doc_target))
