@@ -26,6 +26,7 @@ class AutoDocumenter(BasePlugin):
         ("autodoc_package", mkdocs.config.config_options.Type(mkdocs.utils.string_types, default=None)),
         ("docstring_style", mkdocs.config.config_options.Type(mkdocs.utils.string_types, default="rst")),
         ("no_top_level", mkdocs.config.config_options.Type(bool, default=False)),
+        ("include_inherited", mkdocs.config.config_options.Type(bool, default=False)),
         ("autodoc_build", mkdocs.config.config_options.Type(mkdocs.utils.string_types, default="docs_build")),
         ("usage_template", mkdocs.config.config_options.Type(mkdocs.utils.string_types, default="docs/usage_template.md")),
         ("usage_cmds", mkdocs.config.config_options.Type((list, mkdocs.utils.string_types), default=[])),
@@ -106,7 +107,7 @@ class AutoDocumenter(BasePlugin):
         else:
             docs_file = get_path_relative_to_config(config, os.path.join(self.config["autodoc_build"], api_pkg + ".md"))
             print("Writing API documentation for package {} to {}".format(api_pkg, docs_file))
-            run_oradoc(api_pkg, self.config["docstring_style"], docs_file, self.config["no_top_level"])
+            run_oradoc(api_pkg, self.config["docstring_style"], docs_file, self.config["no_top_level"], self.config["include_inherited"])
 
 
 def get_path_relative_to_config(cfg, relpath):
