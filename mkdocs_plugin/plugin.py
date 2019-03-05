@@ -106,9 +106,10 @@ class AutoDocumenter(BasePlugin):
         except KeyError:
             print("No package name declared for API autodocumentation (use 'autodoc_package')")
         else:
-            docs_file = get_path_relative_to_config(config, os.path.join(self.config["autodoc_build"], api_pkg + ".md"))
-            print("Writing API documentation for package {} to {}".format(api_pkg, docs_file))
-            run_oradoc(api_pkg, self.config["docstring_style"], docs_file, self.config["no_top_level"], self.config["include_inherited"])
+            if api_pkg:
+                docs_file = get_path_relative_to_config(config, os.path.join(self.config["autodoc_build"], api_pkg + ".md"))
+                print("Writing API documentation for package {} to {}".format(api_pkg, docs_file))
+                run_oradoc(api_pkg, self.config["docstring_style"], docs_file, self.config["no_top_level"], self.config["include_inherited"])
 
 
 def get_path_relative_to_config(cfg, relpath):
