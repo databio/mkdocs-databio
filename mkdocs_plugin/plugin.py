@@ -80,9 +80,9 @@ class AutoDocumenter(BasePlugin):
         global TIMER
         # time.sleep(1)
         print("Running AutoDocumenter plugin")
-        print(TIMER, time.time())
         if time.time() - TIMER < 3:
             print("Too fast")
+            print(TIMER, time.time())
             time.sleep(1)
             return(True)
         else:
@@ -92,6 +92,9 @@ class AutoDocumenter(BasePlugin):
         inpath = get_path_relative_to_config(config, self.config["jupyter_source"])
         outpath = get_path_relative_to_config(config, self.config["jupyter_build"])
 
+
+        # The custom template here allows us to flag output blocks as such
+        # so they can be styled differently with css
         for nb in glob.glob(inpath + "/*.ipynb"):
             cmd = "jupyter nbconvert --to markdown" + \
             " --template={tpl}".format(tpl=template) + \
