@@ -1,25 +1,35 @@
-from mkdocs.plugins import BasePlugin
-from mkdocs.commands.build import build
+"""
+Databio group plugin for MkDocs
 
-import mkdocs
+Group software page: http://databio.org/software/
+"""
+
 import os
 import glob
 import subprocess
 import time
 
-timer = 0
+import mkdocs
+from mkdocs.plugins import BasePlugin
+from mkdocs.commands.build import build
+
+from oradocle import run_oradoc
+
+TIMER = 0
+
 
 class AutoDocumenter(BasePlugin):
-    """
-    Populate automatic documentation markdown
-    """
+    """ Populate automatic documentation markdown. """
     config_scheme = (
-        ('jupyter_source', mkdocs.config.config_options.Type(mkdocs.utils.string_types, default="docs_jupyter")),
-        ('jupyter_build', mkdocs.config.config_options.Type(mkdocs.utils.string_types, default="docs_jupyter/build")),
-        ('autodoc_modules', mkdocs.config.config_options.Type(list, default=None)),
-        ('autodoc_build', mkdocs.config.config_options.Type(mkdocs.utils.string_types, default="docs_build")),
-        ('usage_template', mkdocs.config.config_options.Type(mkdocs.utils.string_types, default="docs/usage_template.md")),
-        ('usage_cmds', mkdocs.config.config_options.Type((list, mkdocs.utils.string_types), default=[])),
+        ("jupyter_source", mkdocs.config.config_options.Type(mkdocs.utils.string_types, default="docs_jupyter")),
+        ("jupyter_build", mkdocs.config.config_options.Type(mkdocs.utils.string_types, default="docs_jupyter/build")),
+        ("autodoc_package", mkdocs.config.config_options.Type(mkdocs.utils.string_types, default=None)),
+        ("docstring_style", mkdocs.config.config_options.Type(mkdocs.utils.string_types, default="rst")),
+        ("no_top_level", mkdocs.config.config_options.Type(bool, default=False)),
+        ("include_inherited", mkdocs.config.config_options.Type(bool, default=False)),
+        ("autodoc_build", mkdocs.config.config_options.Type(mkdocs.utils.string_types, default="docs_build")),
+        ("usage_template", mkdocs.config.config_options.Type(mkdocs.utils.string_types, default="docs/usage_template.md")),
+        ("usage_cmds", mkdocs.config.config_options.Type((list, mkdocs.utils.string_types), default=[])),
     )
 
     def on_files(self, files, config):
@@ -44,7 +54,6 @@ class AutoDocumenter(BasePlugin):
         #         out.append(i)
         return files
 
-
     def on_serve(self, server, config):
 
         # Add the jupyter source files to the watchlist, so that changes
@@ -62,25 +71,26 @@ class AutoDocumenter(BasePlugin):
 
         return server
 
-
     def on_pre_build(self, config):
         """
         Convert jupyter notebooks into markdown so they can be rendered by
         mkdocs.
         """
 
-        global timer
+        global TIMER
         # time.sleep(1)
         print("Running AutoDocumenter plugin")
-        print(timer, time.time())
-        if time.time() - timer < 3:
+        print(TIMER, time.time())
+        if time.time() - TIMER < 3:
             print("Too fast")
+            time.sleep(1)
+            return True
         else:
-            timer = time.time()
+            TIMER = time.time()
 
         template = os.path.join(os.path.dirname(__file__), "templates/jupyter_markdown.tpl")
-        inpath = os.path.join(os.path.dirname(config["config_file_path"]), self.config["jupyter_source"])
-        outpath = os.path.join(os.path.dirname(config["config_file_path"]), self.config["jupyter_build"])
+        inpath = get_path_relative_to_config(config, self.config["jupyter_source"])
+        outpath = get_path_relative_to_config(config, self.config["jupyter_build"])
 
         for nb in glob.glob(inpath + "/*.ipynb"):
             cmd = "jupyter nbconvert --to markdown" + \
@@ -90,6 +100,24 @@ class AutoDocumenter(BasePlugin):
             # print(cmd)
             subprocess.call(cmd, shell=True)
 
+        # If possible, create API documentation.
+        try:
+            api_pkg = self.config["autodoc_package"]
+        except KeyError:
+            print("No package name declared for API autodocumentation (use 'autodoc_package')")
+        else:
+            if api_pkg:
+                docs_file = get_path_relative_to_config(config, os.path.join(self.config["autodoc_build"], api_pkg + ".md"))
+                print("Writing API documentation for package {} to {}".format(api_pkg, docs_file))
+                run_oradoc(api_pkg, self.config["docstring_style"], docs_file, self.config["no_top_level"], self.config["include_inherited"])
 
-        # Next, run the usage autodocumentation.
-        
+
+def get_path_relative_to_config(cfg, relpath):
+    """
+    Join relative path to config's parent.
+
+    :param Mapping cfg: config key-value mapping
+    :param relpath: relative path to join
+    :return str: path relative to the given config's config file
+    """
+    return os.path.join(os.path.dirname(cfg["config_file_path"]), relpath)
