@@ -9,6 +9,19 @@ which `{% extends "base.html" %}` and defines various blocks which will replace
 the blocks defined in base.html and its included child templates.
 #}
 
+      {%- block styles %}
+        <link href="{{ 'css/bootstrap.min.css'|url }}" rel="stylesheet">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+        <link href="{{ 'css/base.css'|url }}" rel="stylesheet">
+        {%- if config.theme.highlightjs %}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/{{ config.theme.hljs_style }}.min.css">
+        {%- endif %}
+        {%- for path in config['extra_css'] %}
+        <link href="{{ path|url }}" rel="stylesheet">
+        {%- endfor %}
+      {%- endblock %}
+
+
 {%- block site_name %}
 {% if config.site_logo %}
 <a class="navbar-brand" href="{{ nav.homepage.url|url }}"><img src="{{ config.site_url + config.site_logo }}" class="navlogo"></a>
@@ -96,10 +109,17 @@ the blocks defined in base.html and its included child templates.
     {%- if config.repo_name == 'GitHub' -%}
      <li class="nav-item">
         <a href="{{ config.repo_url }}" class="nav-link">
-            <i class="fa fa-github fa-lg"></i> GitHub
+            <i class="fab fa-github fa-lg"></i> GitHub
         </a>
     </li>
     {%- endif -%}
+    {%- if config.pypi_name is defined-%}
+     <li class="nav-item">
+        <a href="https://pypi.org/project/{{ config.pypi_name  }}" class="nav-link">
+            <i class="fab fa-python fa-lg"></i> PyPI
+        </a>
+    </li>
+    {%- endif -%}    
     <li class="nav-item">
         <a href="http://databio.org" class="nav-link">
             <i class="fa fa-database"></i> Databio.org
