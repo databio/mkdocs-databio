@@ -84,7 +84,7 @@ class AutoDocumenter(BasePlugin):
             print("Too fast")
             print(TIMER, time.time())
             time.sleep(1)
-            return(True)
+            return True
         else:
             TIMER = time.time()
 
