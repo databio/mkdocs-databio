@@ -13,7 +13,7 @@ import mkdocs
 from mkdocs.plugins import BasePlugin
 from mkdocs.commands.build import build
 
-from oradocle import run_oradoc
+from lucidoc import run_lucidoc
 
 TIMER = 0
 
@@ -112,7 +112,7 @@ class AutoDocumenter(BasePlugin):
             if api_pkg:
                 docs_file = get_path_relative_to_config(config, os.path.join(self.config["autodoc_build"], api_pkg + ".md"))
                 print("Writing API documentation for package {} to {}".format(api_pkg, docs_file))
-                run_oradoc(api_pkg, self.config["docstring_style"], docs_file, self.config["no_top_level"], self.config["include_inherited"])
+                run_lucidoc(api_pkg, self.config["docstring_style"], docs_file, self.config["no_top_level"], self.config["include_inherited"])
 
 
 def get_path_relative_to_config(cfg, relpath):
