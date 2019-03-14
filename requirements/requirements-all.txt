@@ -1,2 +1,2 @@
-oradocle
+lucidoc
 mkdocs>=1.0
