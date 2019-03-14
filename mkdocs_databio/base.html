@@ -167,7 +167,6 @@
   <div class="container">
 
     <div class="row">
-    {%- block content %}
       <aside class="col-12 col-md-3 p-0 bg-light">
       </button>
         <nav class="navbar navbar-expand-md navbar-light bg-light align-items-start flex-sm-column flex-row" id="sidebar">
@@ -190,12 +189,14 @@
                 </div>
             </nav>
     </aside>
+
+    {%- block content %}
     <div class="col-md-9 pl-4 pt-3">
       {% include "content.html" %}
     </div> 
+    {%- endblock %} <!-- /content -->
 
     </div>
-    {%- endblock %}
     <!-- /.row -->
 
   </div>
