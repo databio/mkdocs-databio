@@ -1,0 +1,14 @@
+<!--                           {% if page.title == nav_item.title %}
+                            {% if page.toc|length > 0 %}
+                            <ul class="nav flex-column level3">
+                            {%- for toc_item in page.toc %}
+                                {%- for toc_item in toc_item.children %}
+                                    <li class="nav-item flex-row">
+                                        <span class="fa fa-chevron-right" class="toc-chev"></span>
+                                        <a href="{{ toc_item.url }}" class="toc{% if toc_item.active %} active{% endif %}">{{ toc_item.title }}</a>
+                                    </li>
+                                {%- endfor %}
+                            {%- endfor %}
+                            </ul>
+                            {% endif %}
+                          {% endif %} -->

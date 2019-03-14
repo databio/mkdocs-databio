@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 
 {#
-The entry point for the MkDocs Theme.
+
+The main Sheffield lab theme template. This template is based on the original MkDocs Theme.
  
 Any theme customizations should override this file to redefine blocks defined in
 the various templates. The custom theme should only need to define a main.html
@@ -19,9 +20,8 @@ the blocks defined in base.html and its included child templates.
 
 
 {%- block styles %}
-<link href="{{ 'css/bootstrap-custom.min.css'|url }}" rel="stylesheet">
+<link href="{{ 'css/bootstrap.min.css'|url }}" rel="stylesheet">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link href="{{ 'css/base.css'|url }}" rel="stylesheet">
 {%- if config.theme.highlightjs %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/{{ config.theme.hljs_style }}.min.css">
 {%- endif %}
@@ -29,153 +29,4 @@ the blocks defined in base.html and its included child templates.
 <link href="{{ path|url }}" rel="stylesheet">
 {%- endfor %}
 <link href="{{ 'css/extra.css'|url }}" rel="stylesheet">
-{%- endblock %}
-
-
-
-
-
-{%- block site_nav %}
-{%- if nav|length>0 %}
-{% if config.navbar %}    
-    <!-- Main navigation -->
-    <ul class="nav navbar-nav">
-{% set navbar = config.navbar %}
-    {%- for nav_item in navbar.left %}
-    {%- if nav_item.children %}
-        <li class="dropdown{% if nav_item.active %} active{% endif %}">
-            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">{{ nav_item.title }} <b class="caret"></b></a>
-            <ul class="dropdown-menu">
-            {%- for nav_item in nav_item.children %}
-                {% include "nav-sub.html" %}
-            {%- endfor %}
-            </ul>
-        </li>
-    {%- else %}
-    	<li class="navitem{% if nav_item.active %} active{% endif %}">
-            <a href="{{ nav_item.href|url }}" class="nav-link"><span class="fa {{ nav_item.icon }}"></span>&nbsp;{{ nav_item.text }}</a>
-        </li>    {%- endif %}
-    {%- endfor %}
-    </ul>
-{%- endif %}
-{%- endif %}
-{%- endblock %}
-
-
-  {%- block search_button %}
-        <!-- Main navigation -->
-        <ul class="nav navbar-nav">
-    {% set navbar = config.navbar %}
-        {%- if 'search' in config['plugins'] %}
-        <li class="nav-item">
-            <a href="#" class="nav-link" data-toggle="modal" data-target="#mkdocs_search_modal">
-                <i class="fa fa-search"></i> Search
-            </a>
-        </li>
-        {%- endif %}   
-
-    {% if config.navbar %}
-        {%- for nav_item in navbar.right %}
-        {%- if nav_item.children %}
-            <li class="dropdown{% if nav_item.active %} active{% endif %}">
-                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">{{ nav_item.title }} <b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                {%- for nav_item in nav_item.children %}
-                    {% include "nav-sub.html" %}
-                {%- endfor %}
-                </ul>
-            </li>
-        {%- else %}
-            <li class="navitem{% if nav_item.active %} active{% endif %}">
-                <a href="{{ nav_item.href|url }}" class="nav-link"><span class="fa {{ nav_item.icon }}"></span>&nbsp;{{ nav_item.text }}</a>
-            </li>    
-        {%- endif %}
-        {%- endfor %}
-        </ul>
-    {%- endif %}
-    {%- if config.repo_name == 'GitHub' -%}
-     <li class="nav-item">
-        <a href="{{ config.repo_url }}" class="nav-link">
-            <i class="fab fa-github fa-lg"></i> GitHub
-        </a>
-    </li>
-    {%- endif -%}
-    {%- if config.pypi_name is defined-%}
-     <li class="nav-item">
-        <a href="https://pypi.org/project/{{ config.pypi_name  }}" class="nav-link">
-            <i class="fab fa-python fa-lg"></i> PyPI
-        </a>
-    </li>
-    {%- endif -%}    
-    <li class="nav-item">
-        <a href="http://databio.org" class="nav-link">
-            <i class="fa fa-database"></i> Databio.org
-        </a>
-    </li>
-  {%- endblock %}
-
-
-
-{%- block next_prev %}
-
-{%- endblock %}
-
-{%- block footer %}
-        {%- if page and (page.next_page or page.previous_page) %}
-        <div class="container">
-        <ul style="display:block; list-style: none; padding:0px; margin:0px">
-            <li style="display: inline-block; padding: 5px 15px">
-                <a rel="prev" {% if page.previous_page %}href="{{ page.previous_page.url|url }}" class="nav-link"{% else %}class="nav-link disabled"{% endif %}>
-                    <i class="fa fa-arrow-left"></i> Previous
-                </a>
-            </li>
-            <li style="display: inline-block; padding: 5px 15px">
-                <a rel="next" {% if page.next_page %}href="{{ page.next_page.url|url }}" class="nav-link"{% else %}class="nav-link disabled"{% endif %}>
-                    Next <i class="fa fa-arrow-right"></i>
-                </a>
-            </li>
-        </ul>
-        </div>
-        {%- endif %}
-
-<hr style="width: 30%">
-            {%- if page and page.edit_url %}
-                
-                    <a href="{{ page.edit_url }}" class="nav-link">
-                        {%- if config.repo_name == 'GitHub' -%}
-                            <i class="fa fa-github"></i> Edit this page on {{ config.repo_name }}
-                        {%- elif config.repo_name == 'Bitbucket' -%}
-                            <i class="fa fa-bitbucket"></i> Edit on {{ config.repo_name }}
-                        {%- elif config.repo_name == 'GitLab' -%}
-                            <i class="fa fa-gitlab"></i> Edit on {{ config.repo_name }}
-                        {%- else -%}
-                        Edit on {{ config.repo_name }}
-                        {%- endif -%}
-                    </a>
-                
-            {%- elif config.repo_url %}
-                
-                    <a href="{{ config.repo_url }}" class="nav-link">
-                        {%- if config.repo_name == 'GitHub' -%}
-                            <i class="fa fa-github"></i> {{ config.repo_name }}
-                        {%- elif config.repo_name == 'Bitbucket' -%}
-                            <i class="fa fa-bitbucket"></i> {{ config.repo_name }}
-                        {%- elif config.repo_name == 'GitLab' -%}
-                            <i class="fa fa-gitlab"></i> {{ config.repo_name }}
-                        {%- else -%}
-                        {{ config.repo_name }}
-                        {%- endif -%}
-                    </a>
-                
-            {%- endif %}
-{%- if config.copyright %}
-    <p>{{ config.copyright }}</p>
-    {%- else %}
-    <p><a href="http://databio.org/">Sheffield Computational Biology Lab</a></p>
-{%- endif %}
-{%- endblock %}
-
-
-
-{%- block repo %}
 {%- endblock %}
