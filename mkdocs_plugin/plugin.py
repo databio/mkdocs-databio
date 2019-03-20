@@ -6,8 +6,14 @@ Group software page: http://databio.org/software/
 
 import os
 import glob
+import sys
 import subprocess
 import time
+
+if sys.version_info < (3, 3):
+    from collections import Mapping
+else:
+    from collections.abc import Mapping
 
 import mkdocs
 from mkdocs.plugins import BasePlugin
@@ -104,15 +110,29 @@ class AutoDocumenter(BasePlugin):
             subprocess.call(cmd, shell=True)
 
         # If possible, create API documentation.
-        try:
-            api_pkg = self.config["autodoc_package"]
-        except KeyError:
-            print("No package name declared for API autodocumentation (use 'autodoc_package')")
+        api_pkg = self.config.get("autodoc_package")
+        if api_pkg:
+            args = (api_pkg, self.config["docstring_style"])
+            kwargs = {
+                "no_mod_docstr": self.config["no_top_level"],
+                "include_inherited": self.config["include_inherited"]
+            }
+            outfolder = get_path_relative_to_config(config, self.config["autodoc_build"])
+            try:
+                build_list = self.config["build_list"]
+            except KeyError:
+                docs_file = os.path.join(outfolder, api_pkg + ".md")
+                kwargs["outfile"] = docs_file
+            else:
+                kwargs["outfolder"] = outfolder
+                if isinstance(build_list, Mapping):
+                    kwargs["groups"] = build_list
+                else:
+                    kwargs["whitelist"] = build_list
+            print("Writing API documentation for package {}".format(api_pkg))
+            run_lucidoc(*args, **kwargs)
         else:
-            if api_pkg:
-                docs_file = get_path_relative_to_config(config, os.path.join(self.config["autodoc_build"], api_pkg + ".md"))
-                print("Writing API documentation for package {} to {}".format(api_pkg, docs_file))
-                run_lucidoc(api_pkg, self.config["docstring_style"], docs_file, self.config["no_top_level"], self.config["include_inherited"])
+            print("No package name declared for API autodocumentation (use 'autodoc_package')")
 
 
 def get_path_relative_to_config(cfg, relpath):
