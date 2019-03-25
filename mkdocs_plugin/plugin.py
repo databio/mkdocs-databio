@@ -106,8 +106,14 @@ class AutoDocumenter(BasePlugin):
             " --template={tpl}".format(tpl=template) + \
             " {notebook} --output-dir {od}".format(notebook=nb, od=outpath)
 
-            # print(cmd)
+            print(cmd)
             subprocess.call(cmd, shell=True)
+
+            files_folder = "{od}/{notebook}_files".format(od=outpath, notebook=os.path.splitext(os.path.basename(nb))[0])
+            print(files_folder)
+            if os.path.exists(files_folder):
+                os.symlink(files_folder, os.path.join(os.path.dirname(outpath), os.path.basename(files_folder))) 
+
 
         # If possible, create API documentation.
         api_pkg = self.config.get("autodoc_package")
