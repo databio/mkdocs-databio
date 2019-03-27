@@ -121,7 +121,17 @@ class AutoDocumenter(BasePlugin):
             try:
                 build_list = self.config["build_list"]
             except KeyError:
-                docs_file = os.path.join(outfolder, api_pkg + ".md")
+                outfile_keyname = "autodoc_outfile"
+                filename = self.config.get(outfile_keyname)
+                if filename:
+                    if not isinstance(filename, str):
+                        msg = "Basename for autodoc output file isn't text; " \
+                              "got {} ({}) (from key '{}')".format(
+                            filename, type(filename), outfile_keyname)
+                        raise TypeError(msg)
+                else:
+                    filename = api_pkg + ".md"
+                docs_file = os.path.join(outfolder, filename)
                 kwargs["outfile"] = docs_file
             else:
                 kwargs["outfolder"] = outfolder
