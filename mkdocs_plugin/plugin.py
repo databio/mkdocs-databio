@@ -28,8 +28,8 @@ _CFG_FILE_KEY = "config_file_path"
 class AutoDocumenter(BasePlugin):
     """ Populate automatic documentation markdown. """
     config_scheme = (
-        ("pypi_name", mkdocs.config.config_options.Type(mkdocs.utils.string_types)),
         ("site_logo", mkdocs.config.config_options.Type(mkdocs.utils.string_types)),
+        ("pypi_name", mkdocs.config.config_options.Type(mkdocs.utils.string_types)),
         ("jupyter_source", mkdocs.config.config_options.Type(mkdocs.utils.string_types, default=_NBFOLDER)),
         (_NBFOLDER_BUILD, mkdocs.config.config_options.Type(mkdocs.utils.string_types, default=os.path.join(_NBFOLDER, "build"))),
         (_API_KEY, mkdocs.config.config_options.Type(mkdocs.utils.string_types, default=None)),
@@ -47,10 +47,8 @@ class AutoDocumenter(BasePlugin):
         # This will allow them to be used in the final rendered HTML pages,
         # even though they are not in the primary docs_dir.
 
-        inpath = os.path.join(os.path.dirname(config[_CFG_FILE_KEY]), self.config["jupyter_source"])
-        outpath = os.path.join(os.path.dirname(config[_CFG_FILE_KEY]), self.config[_NBFOLDER_BUILD])
-
-        for nb in glob.glob(outpath + "/*.md"):
+        for nb in glob.glob(os.path.join(os.path.dirname(
+                config[_CFG_FILE_KEY]), self.config[_NBFOLDER_BUILD], "*.md")):
             nb = os.path.relpath(nb, self.config[_NBFOLDER_BUILD])
             # print(nb, os.path.abspath(config[_NBFOLDER_BUILD]), config['site_dir'], config['use_directory_urls'])
             files.append(mkdocs.structure.files.File(nb, os.path.abspath(self.config[_NBFOLDER_BUILD]), config['site_dir'], config['use_directory_urls']))
