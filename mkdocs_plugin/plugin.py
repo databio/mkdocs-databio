@@ -9,32 +9,35 @@ import glob
 import sys
 import subprocess
 import time
-
 if sys.version_info < (3, 3):
     from collections import Mapping
 else:
     from collections.abc import Mapping
-
 import mkdocs
 from mkdocs.plugins import BasePlugin
 from mkdocs.commands.build import build
-
 from lucidoc import run_lucidoc
 
 TIMER = 0
+_NBFOLDER = "docs_jupyter"
+_NBFOLDER_BUILD = "jupyter_build"
+_API_KEY = "autodoc_package"
+_CFG_FILE_KEY = "config_file_path"
 
 
 class AutoDocumenter(BasePlugin):
     """ Populate automatic documentation markdown. """
     config_scheme = (
-        ("jupyter_source", mkdocs.config.config_options.Type(mkdocs.utils.string_types, default="docs_jupyter")),
-        ("jupyter_build", mkdocs.config.config_options.Type(mkdocs.utils.string_types, default="docs_jupyter/build")),
-        ("autodoc_package", mkdocs.config.config_options.Type(mkdocs.utils.string_types, default=None)),
+        ("pypi_name", mkdocs.config.config_options.Type(mkdocs.utils.string_types)),
+        ("site_logo", mkdocs.config.config_options.Type(mkdocs.utils.string_types)),
+        ("jupyter_source", mkdocs.config.config_options.Type(mkdocs.utils.string_types, default=_NBFOLDER)),
+        (_NBFOLDER_BUILD, mkdocs.config.config_options.Type(mkdocs.utils.string_types, default=os.path.join(_NBFOLDER, "build"))),
+        (_API_KEY, mkdocs.config.config_options.Type(mkdocs.utils.string_types, default=None)),
         ("docstring_style", mkdocs.config.config_options.Type(mkdocs.utils.string_types, default="rst")),
         ("no_top_level", mkdocs.config.config_options.Type(bool, default=False)),
         ("include_inherited", mkdocs.config.config_options.Type(bool, default=False)),
         ("autodoc_build", mkdocs.config.config_options.Type(mkdocs.utils.string_types, default="docs_build")),
-        ("usage_template", mkdocs.config.config_options.Type(mkdocs.utils.string_types, default="docs/usage_template.md")),
+        ("usage_template", mkdocs.config.config_options.Type(mkdocs.utils.string_types, default=os.path.join("docs", "usage_template.md"))),
         ("usage_cmds", mkdocs.config.config_options.Type((list, mkdocs.utils.string_types), default=[])),
     )
 
@@ -44,13 +47,13 @@ class AutoDocumenter(BasePlugin):
         # This will allow them to be used in the final rendered HTML pages,
         # even though they are not in the primary docs_dir.
 
-        inpath = os.path.join(os.path.dirname(config["config_file_path"]), self.config["jupyter_source"])
-        outpath = os.path.join(os.path.dirname(config["config_file_path"]), self.config["jupyter_build"])
+        inpath = os.path.join(os.path.dirname(config[_CFG_FILE_KEY]), self.config["jupyter_source"])
+        outpath = os.path.join(os.path.dirname(config[_CFG_FILE_KEY]), self.config[_NBFOLDER_BUILD])
 
         for nb in glob.glob(outpath + "/*.md"):
-            nb = os.path.relpath(nb, self.config["jupyter_build"])
-            # print(nb, os.path.abspath(config["jupyter_build"]), config['site_dir'], config['use_directory_urls'])
-            files.append(mkdocs.structure.files.File(nb, os.path.abspath(self.config["jupyter_build"]), config['site_dir'], config['use_directory_urls']))
+            nb = os.path.relpath(nb, self.config[_NBFOLDER_BUILD])
+            # print(nb, os.path.abspath(config[_NBFOLDER_BUILD]), config['site_dir'], config['use_directory_urls'])
+            files.append(mkdocs.structure.files.File(nb, os.path.abspath(self.config[_NBFOLDER_BUILD]), config['site_dir'], config['use_directory_urls']))
             nbm = os.path.splitext(nb)[0]+'.ipynb'
             # print(nbm, os.path.abspath(config["jupyter_source"]), config['site_dir'], config['use_directory_urls'])
             files.append(mkdocs.structure.files.File(nbm, os.path.abspath(self.config["jupyter_source"]), config['site_dir'], config['use_directory_urls']))
@@ -65,7 +68,7 @@ class AutoDocumenter(BasePlugin):
         # Add the jupyter source files to the watchlist, so that changes
         # will trigger a rebuild of the docs in dev mode
 
-        inpath = os.path.join(os.path.dirname(config["config_file_path"]), self.config["jupyter_source"])
+        inpath = os.path.join(os.path.dirname(config[_CFG_FILE_KEY]), self.config["jupyter_source"])
 
         for nb in glob.glob(inpath + "/*.ipynb"):
             print("Add to watch: {}".format(nb))
@@ -96,8 +99,7 @@ class AutoDocumenter(BasePlugin):
 
         template = os.path.join(os.path.dirname(__file__), "templates/jupyter_markdown.tpl")
         inpath = get_path_relative_to_config(config, self.config["jupyter_source"])
-        outpath = get_path_relative_to_config(config, self.config["jupyter_build"])
-
+        outpath = get_path_relative_to_config(config, self.config[_NBFOLDER_BUILD])
 
         # The custom template here allows us to flag output blocks as such
         # so they can be styled differently with css
@@ -112,11 +114,10 @@ class AutoDocumenter(BasePlugin):
             files_folder = "{od}/{notebook}_files".format(od=outpath, notebook=os.path.splitext(os.path.basename(nb))[0])
             print(files_folder)
             if os.path.exists(files_folder):
-                os.symlink(files_folder, os.path.join(os.path.dirname(outpath), os.path.basename(files_folder))) 
-
+                os.symlink(files_folder, os.path.join(os.path.dirname(outpath), os.path.basename(files_folder)))
 
         # If possible, create API documentation.
-        api_pkg = self.config.get("autodoc_package")
+        api_pkg = self.config.get(_API_KEY)
         if api_pkg:
             args = (api_pkg, self.config["docstring_style"])
             kwargs = {
@@ -148,7 +149,7 @@ class AutoDocumenter(BasePlugin):
             print("Writing API documentation for package {}".format(api_pkg))
             run_lucidoc(*args, **kwargs)
         else:
-            print("No package name declared for API autodocumentation (use 'autodoc_package')")
+            print("No package name declared for API autodocumentation (use '{}')".format(_API_KEY))
 
 
 def get_path_relative_to_config(cfg, relpath):
@@ -159,4 +160,4 @@ def get_path_relative_to_config(cfg, relpath):
     :param relpath: relative path to join
     :return str: path relative to the given config's config file
     """
-    return os.path.join(os.path.dirname(cfg["config_file_path"]), relpath)
+    return os.path.join(os.path.dirname(cfg[_CFG_FILE_KEY]), relpath)
