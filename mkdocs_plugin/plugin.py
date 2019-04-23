@@ -52,7 +52,7 @@ class AutoDocumenter(BasePlugin):
             nb = os.path.relpath(nb, self.config[_NBFOLDER_BUILD])
             # print(nb, os.path.abspath(config[_NBFOLDER_BUILD]), config['site_dir'], config['use_directory_urls'])
             files.append(mkdocs.structure.files.File(nb, os.path.abspath(self.config[_NBFOLDER_BUILD]), config['site_dir'], config['use_directory_urls']))
-            nbm = os.path.splitext(nb)[0]+'.ipynb'
+            nbm = os.path.splitext(nb)[0] + '.ipynb'
             # print(nbm, os.path.abspath(config["jupyter_source"]), config['site_dir'], config['use_directory_urls'])
             files.append(mkdocs.structure.files.File(nbm, os.path.abspath(self.config["jupyter_source"]), config['site_dir'], config['use_directory_urls']))
 
@@ -68,7 +68,7 @@ class AutoDocumenter(BasePlugin):
 
         inpath = os.path.join(os.path.dirname(config[_CFG_FILE_KEY]), self.config["jupyter_source"])
 
-        for nb in glob.glob(inpath + "/*.ipynb"):
+        for nb in glob.glob(os.path.join(inpath, "*.ipynb")):
             print("Add to watch: {}".format(nb))
 
             def builder():
@@ -79,10 +79,7 @@ class AutoDocumenter(BasePlugin):
         return server
 
     def on_pre_build(self, config):
-        """
-        Convert jupyter notebooks into markdown so they can be rendered by
-        mkdocs.
-        """
+        """ Usage example notebook and API autodocumentation """
 
         global TIMER
         # time.sleep(1)
@@ -101,7 +98,7 @@ class AutoDocumenter(BasePlugin):
 
         # The custom template here allows us to flag output blocks as such
         # so they can be styled differently with css
-        for nb in glob.glob(inpath + "/*.ipynb"):
+        for nb in glob.glob(os.path.join(inpath, "*.ipynb")):
             cmd = "jupyter nbconvert --to markdown" + \
             " --template={tpl}".format(tpl=template) + \
             " {notebook} --output-dir {od}".format(notebook=nb, od=outpath)
@@ -109,7 +106,7 @@ class AutoDocumenter(BasePlugin):
             print(cmd)
             subprocess.call(cmd, shell=True)
 
-            files_folder = "{od}/{notebook}_files".format(od=outpath, notebook=os.path.splitext(os.path.basename(nb))[0])
+            files_folder = os.path.join(outpath, os.path.splitext(os.path.basename(nb))[0] + "_files")
             print(files_folder)
             if os.path.exists(files_folder):
                 os.symlink(files_folder, os.path.join(os.path.dirname(outpath), os.path.basename(files_folder)))
