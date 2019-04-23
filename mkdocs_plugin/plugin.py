@@ -101,15 +101,17 @@ class AutoDocumenter(BasePlugin):
         for nb in glob.glob(os.path.join(inpath, "*.ipynb")):
             cmd = "jupyter nbconvert --to markdown" + \
             " --template={tpl}".format(tpl=template) + \
-            " {notebook} --output-dir {od}".format(notebook=nb, od=outpath)
+            " {notebook} --stdout | sed 's/\x1b\[[0-9;]*m//g' > {od}/{notebooknox}.md".format(notebook=nb, od=outpath,
+             notebooknox=os.path.splitext(os.path.basename(nb))[0])
 
             print(cmd)
             subprocess.call(cmd, shell=True)
 
             files_folder = os.path.join(outpath, os.path.splitext(os.path.basename(nb))[0] + "_files")
             print(files_folder)
-            if os.path.exists(files_folder):
-                os.symlink(files_folder, os.path.join(os.path.dirname(outpath), os.path.basename(files_folder)))
+            target = os.path.join(os.path.dirname(outpath), os.path.basename(files_folder))
+            if os.path.exists(files_folder) and not os.path.exists(target):
+                os.symlink(files_folder, target)
 
         # If possible, create API documentation.
         api_pkg = self.config.get(_API_KEY)
