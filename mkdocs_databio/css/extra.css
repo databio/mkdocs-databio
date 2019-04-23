@@ -199,9 +199,9 @@ body {
 /* header images */
 
 .img-header, .col-md-9 .img-header {
-  max-height:55px;
+  max-height:65px;
   margin-top:-15px;
-  margin-bottom:-10px;
+  margin-bottom:-5px;
   border:0px;
 }
 
