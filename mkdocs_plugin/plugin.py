@@ -102,17 +102,25 @@ class AutoDocumenter(BasePlugin):
         # The custom template here allows us to flag output blocks as such
         # so they can be styled differently with css
         for nb in glob.glob(inpath + "/*.ipynb"):
+            output_markdown = "{od}/{notebooknox}.md".format(od=outpath, notebooknox=os.path.splitext(os.path.basename(nb))[0])
+            
+            # For some reason mkdocs doesn't like the traditional '---' 
+            # markdown metadata fences
+            with open(output_markdown, 'w') as file:
+                file.write("jupyter:True\n")
+
             cmd = "jupyter nbconvert --to markdown" + \
             " --template={tpl}".format(tpl=template) + \
             " {notebook} --output-dir {od}".format(notebook=nb, od=outpath)
 
             cmd = "jupyter nbconvert --to markdown" + \
             " --template={tpl}".format(tpl=template) + \
-            " {notebook} --stdout | sed 's/\x1b\[[0-9;]*m//g' > {od}/{notebooknox}.md".format(notebook=nb, od=outpath,
+            " {notebook} --stdout | sed 's/\x1b\[[0-9;]*m//g' >> {od}/{notebooknox}.md".format(notebook=nb, od=outpath,
              notebooknox=os.path.splitext(os.path.basename(nb))[0])
 
             print(cmd)
             subprocess.call(cmd, shell=True)
+
 
             files_folder = "{od}/{notebook}_files".format(od=outpath, notebook=os.path.splitext(os.path.basename(nb))[0])
             print(files_folder)
