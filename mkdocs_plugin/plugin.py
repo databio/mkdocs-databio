@@ -86,7 +86,7 @@ class AutoDocumenter(BasePlugin):
         global TIMER
         # time.sleep(1)
         print("Running AutoDocumenter plugin")
-        if time.time() - TIMER < 3:
+        if time.time() - TIMER < 5:
             print("Too fast")
             print(TIMER, time.time())
             time.sleep(1)
