@@ -3,3 +3,4 @@ mkdocs>=1.0
 jupyter
 peppy
 fontawesome-markdown
+pymdown-extensions
