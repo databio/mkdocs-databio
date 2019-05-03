@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 import sys
 
 
-VERSION = '1.1dev'
+VERSION = '1.2dev'
 PACKAGE = "mkdocs-databio"
 REQDIR = "requirements"
 
