@@ -12,7 +12,7 @@ the blocks defined in base.html and its included child templates.
 
 {%- block site_name %}
 {% if config.site_logo %}
-<a class="navbar-brand" href="{{ nav.homepage.url|url }}"><img src="{{ config.site_logo|url }}" class="navlogo"></a>
+<a class="navbar-brand" href="{{ nav.homepage.url|url }}"><img src="{{ config.site_logo }}" class="navlogo"></a>
 {% else %}
 <a class="navbar-brand" href="{{ nav.homepage.url|url }}">{{ config.site_name }}</a>
 {% endif %}
