@@ -5,7 +5,6 @@ from setuptools import setup, find_packages
 import sys
 
 
-VERSION = '1.2dev'
 PACKAGE = "mkdocs-databio"
 REQDIR = "requirements"
 
@@ -27,10 +26,13 @@ if sys.version_info >= (3, ):
 
 extra["install_requires"] = read_reqs("all")
 
+with open("mkdocs_plugin/_version.py", 'r') as versionfile:
+    version = versionfile.readline().split()[-1].strip("\"'\n")
+
 
 setup(
     name=PACKAGE,
-    version=VERSION,
+    version=version,
     url='http://github.com/databio/mkdocs-databio/',
     license='BSD2',
     classifiers=[
