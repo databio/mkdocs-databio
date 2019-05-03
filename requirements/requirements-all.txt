@@ -1,3 +1,6 @@
 lucidoc>=0.2
 mkdocs>=1.0
 jupyter
+peppy
+fontawesome-markdown
+pymdown-extensions

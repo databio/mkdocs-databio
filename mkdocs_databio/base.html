@@ -223,9 +223,15 @@
         {%- endif %}
 
 <hr style="width: 30%">
-            {%- if page and page.edit_url %}
+
+  {% if page.meta.jupyter %}
+  {% set edit_url = page.edit_url | replace("/docs/", "/docs_jupyter/") | replace(".md", ".ipynb") %}
+  {% else %}
+  {% set edit_url = page.edit_url %}
+  {% endif %}
+            {%- if page and edit_url %}
                 
-                    <a href="{{ page.edit_url }}" class="nav-link">
+                    <a href="{{ edit_url }}" class="nav-link">
                         {%- if config.repo_name == 'GitHub' -%}
                             <i class="fab fa-github fa-lg"></i> Edit this page on {{ config.repo_name }}
                         {%- elif config.repo_name == 'Bitbucket' -%}
