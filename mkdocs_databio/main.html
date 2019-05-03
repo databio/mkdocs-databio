@@ -10,9 +10,12 @@ which `{% extends "base.html" %}` and defines various blocks which will replace
 the blocks defined in base.html and its included child templates.
 #}
 
+
 {%- block site_name %}
+{{base_url}}
+{{base_url|url}}
 {% if config.site_logo %}
-<a class="navbar-brand" href="{{ nav.homepage.url|url }}"><img src="{{ base_url+config.site_logo }}" class="navlogo"></a>
+<a class="navbar-brand" href="{{ nav.homepage.url|url }}"><img src="{{ config.site_logo | url}}" class="navlogo"></a>
 {% else %}
 <a class="navbar-brand" href="{{ nav.homepage.url|url }}">{{ config.site_name }}</a>
 {% endif %}
