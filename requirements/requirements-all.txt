@@ -1,4 +1,4 @@
-lucidoc>=0.2
+lucidoc>=0.4
 mkdocs>=1.0
 jupyter
 peppy
