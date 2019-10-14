@@ -17,8 +17,6 @@ import mkdocs
 from mkdocs.plugins import BasePlugin
 from mkdocs.commands.build import build
 from lucidoc import run_lucidoc
-from . import version
-
 
 TIMER = 0
 _NBFOLDER = "docs_jupyter"
