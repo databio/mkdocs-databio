@@ -148,7 +148,14 @@
                   <i class="fab fa-python fa-lg"></i> PyPI
               </a>
           </li>
-          {%- endif -%}    
+          {%- endif -%}  
+          {%- if config.paper_link is defined-%}
+           <li class="nav-item">
+              <a href="{{ config.paper_link }}" class="nav-link">
+                  <i class="fab fa-file-alt fa-lg"></i> Manuscript
+              </a>
+          </li>
+          {%- endif -%}             
           <li class="nav-item">
               <a href="http://databio.org" class="nav-link">
                   <i class="fa fa-database"></i> Databio.org
