@@ -17,13 +17,14 @@ import mkdocs
 from mkdocs.plugins import BasePlugin
 from mkdocs.commands.build import build
 from lucidoc import run_lucidoc
+from . import version
+
 
 TIMER = 0
 _NBFOLDER = "docs_jupyter"
 _NBFOLDER_BUILD = "jupyter_build"
 _API_KEY = "autodoc_package"
 _CFG_FILE_KEY = "config_file_path"
-
 
 class AutoDocumenter(BasePlugin):
     """ Populate automatic documentation markdown. """
@@ -80,7 +81,6 @@ class AutoDocumenter(BasePlugin):
 
     def on_pre_build(self, config):
         """ Usage example notebook and API autodocumentation """
-
         global TIMER
         # time.sleep(1)
         print("Running AutoDocumenter plugin")
