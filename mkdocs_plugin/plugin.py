@@ -120,7 +120,7 @@ class AutoDocumenter(BasePlugin):
 
             files_folder = os.path.join(outpath, os.path.splitext(os.path.basename(nb))[0] + "_files")
             print(files_folder)
-            target = os.path.join(os.path.dirname(outpath), os.path.basename(files_folder))
+            target = os.path.join(os.path.dirname(outpath), os.path.basename(files_folder), "docs")
             if os.path.exists(files_folder) and not os.path.exists(target):
                 os.symlink(files_folder, target)
 
