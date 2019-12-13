@@ -117,12 +117,12 @@ class AutoDocumenter(BasePlugin):
             print(cmd)
             subprocess.call(cmd, shell=True)
 
-
-            files_folder = os.path.join(outpath, os.path.splitext(os.path.basename(nb))[0] + "_files")
-            print(files_folder)
-            target = os.path.join(os.path.dirname(outpath), os.path.basename(files_folder), "docs")
-            if os.path.exists(files_folder) and not os.path.exists(target):
-                os.symlink(files_folder, target)
+            target = get_path_relative_to_config(config, os.path.join("docs/jupyter_docs", os.path.basename(output_markdown)))
+            target_dir = os.path.dirname(target)
+            if not os.path.exists(target_dir):
+                os.makedirs(target_dir)
+            if not os.path.exists(target):
+                os.symlink(output_markdown, target)
 
         # If possible, create API documentation.
         api_pkg = self.config.get(_API_KEY)
