@@ -94,6 +94,9 @@ class AutoDocumenter(BasePlugin):
         inpath = get_path_relative_to_config(config, self.config["jupyter_source"])
         outpath = get_path_relative_to_config(config, self.config[_NBFOLDER_BUILD])
 
+        if not os.path.exists(outpath):
+            os.makedirs(outpath)
+
         # The custom template here allows us to flag output blocks as such
         # so they can be styled differently with css
 
