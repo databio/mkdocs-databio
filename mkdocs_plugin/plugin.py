@@ -94,16 +94,13 @@ class AutoDocumenter(BasePlugin):
         inpath = get_path_relative_to_config(config, self.config["jupyter_source"])
         outpath = get_path_relative_to_config(config, self.config[_NBFOLDER_BUILD])
 
-        if not os.path.exists(outpath):
-            os.makedirs(outpath)
-
         # The custom template here allows us to flag output blocks as such
         # so they can be styled differently with css
 
         for nb in glob.glob(os.path.join(inpath, "*.ipynb")):
             output_markdown = "{od}/{notebooknox}.md".format(od=outpath, notebooknox=os.path.splitext(os.path.basename(nb))[0])
-            
-            # For some reason mkdocs doesn't like the traditional '---' 
+
+            # For some reason mkdocs doesn't like the traditional '---'
             # markdown metadata fences
             with open(output_markdown, 'w') as file:
                 file.write("jupyter:True\n")
@@ -120,12 +117,12 @@ class AutoDocumenter(BasePlugin):
             print(cmd)
             subprocess.call(cmd, shell=True)
 
-            target = get_path_relative_to_config(config, os.path.join("docs/jupyter_docs", os.path.basename(output_markdown)))
-            target_dir = os.path.dirname(target)
-            if not os.path.exists(target_dir):
-                os.makedirs(target_dir)
-            if not os.path.exists(target):
-                os.symlink(output_markdown, target)
+
+            files_folder = os.path.join(outpath, os.path.splitext(os.path.basename(nb))[0] + "_files")
+            print(files_folder)
+            target = os.path.join(os.path.dirname(outpath), os.path.basename(files_folder))
+            if os.path.exists(files_folder) and not os.path.exists(target):
+                os.symlink(files_folder, target)
 
         # If possible, create API documentation.
         api_pkg = self.config.get(_API_KEY)
