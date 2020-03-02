@@ -163,6 +163,16 @@ body {
 }
 
 
+.nav-link {
+  font-size: 0.8em;
+  padding-right: 0.4em;
+  padding-left: 0.8em
+}
+
+.navbar { 
+  padding-left: 0.7em;
+  padding-right: 0.7em;
+  }
 
 .nav .nav-item .toc-chev {
 	padding-left:10px;
