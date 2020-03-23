@@ -27,17 +27,17 @@ _CFG_FILE_KEY = "config_file_path"
 class AutoDocumenter(BasePlugin):
     """ Populate automatic documentation markdown. """
     config_scheme = (
-        ("site_logo", mkdocs.config.config_options.Type(mkdocs.utils.string_types)),
-        ("pypi_name", mkdocs.config.config_options.Type(mkdocs.utils.string_types)),
-        ("jupyter_source", mkdocs.config.config_options.Type(mkdocs.utils.string_types, default=_NBFOLDER)),
-        (_NBFOLDER_BUILD, mkdocs.config.config_options.Type(mkdocs.utils.string_types, default=os.path.join(_NBFOLDER, "build"))),
-        (_API_KEY, mkdocs.config.config_options.Type(mkdocs.utils.string_types, default=None)),
-        ("docstring_style", mkdocs.config.config_options.Type(mkdocs.utils.string_types, default="rst")),
+        ("site_logo", mkdocs.config.config_options.Type(str)),
+        ("pypi_name", mkdocs.config.config_options.Type(str)),
+        ("jupyter_source", mkdocs.config.config_options.Type(str, default=_NBFOLDER)),
+        (_NBFOLDER_BUILD, mkdocs.config.config_options.Type(str, default=os.path.join(_NBFOLDER, "build"))),
+        (_API_KEY, mkdocs.config.config_options.Type(str, default=None)),
+        ("docstring_style", mkdocs.config.config_options.Type(str, default="rst")),
         ("no_top_level", mkdocs.config.config_options.Type(bool, default=False)),
         ("include_inherited", mkdocs.config.config_options.Type(bool, default=False)),
-        ("autodoc_build", mkdocs.config.config_options.Type(mkdocs.utils.string_types, default="docs_build")),
-        ("usage_template", mkdocs.config.config_options.Type(mkdocs.utils.string_types, default=os.path.join("docs", "usage_template.md"))),
-        ("usage_cmds", mkdocs.config.config_options.Type((list, mkdocs.utils.string_types), default=[])),
+        ("autodoc_build", mkdocs.config.config_options.Type(str, default="docs_build")),
+        ("usage_template", mkdocs.config.config_options.Type(str, default=os.path.join("docs", "usage_template.md"))),
+        ("usage_cmds", mkdocs.config.config_options.Type((list, str), default=[])),
     )
 
     def on_files(self, files, config):
