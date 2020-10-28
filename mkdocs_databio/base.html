@@ -155,12 +155,16 @@
                   <i class="far fa-file-alt fa-lg"></i> Manuscript
               </a>
           </li>
-          {%- endif -%}             
+          {%- endif -%}
+          {%- block nav_home_link %}
+          {%- if config.home_link is defined-%}
           <li class="nav-item">
-              <a href="http://databio.org" class="nav-link">
-                  <i class="fa fa-database"></i> Databio.org
+              <a href="{{ config.home_link.url }}" class="nav-link">
+                  <i class="{{ config.home_link.icon }}"></i> {{ config.home_link.text }}
               </a>
           </li>
+          {%- endif %}
+          {%- endblock %}
         {%- endblock %}
 
       </div>
