@@ -163,6 +163,12 @@
                   <i class="{{ config.home_link.icon }}"></i> {{ config.home_link.text }}
               </a>
           </li>
+          {% else %}
+          <li class="nav-item">
+              <a href="http://databio.org" class="nav-link">
+                  <i class="fa fa-database"></i> Databio.org
+              </a>
+          </li>          
           {%- endif %}
           {%- endblock %}
         {%- endblock %}
