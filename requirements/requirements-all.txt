@@ -4,3 +4,4 @@ jupyter
 peppy
 fontawesome-markdown
 pymdown-extensions
+nbconvert>=6.0.7
