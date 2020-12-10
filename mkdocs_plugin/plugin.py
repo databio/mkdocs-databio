@@ -60,7 +60,7 @@ class AutoDocumenter(BasePlugin):
         #         out.append(i)
         return files
 
-    def on_serve(self, server, config):
+    def on_serve(self, server, config, **kwargs):
 
         # Add the jupyter source files to the watchlist, so that changes
         # will trigger a rebuild of the docs in dev mode
