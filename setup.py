@@ -21,8 +21,8 @@ def read_reqs(reqs_name):
 
 # 2to3
 extra = {}
-if sys.version_info >= (3, ):
-    extra["use_2to3"] = True
+# if sys.version_info >= (3, ):
+#     extra["use_2to3"] = True
 
 extra["install_requires"] = read_reqs("all")
 
