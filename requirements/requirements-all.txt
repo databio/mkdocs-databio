@@ -5,3 +5,4 @@ peppy
 fontawesome-markdown
 pymdown-extensions
 nbconvert>=6.0.7
+logmuse>=0.2.7
