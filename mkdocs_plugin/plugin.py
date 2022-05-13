@@ -9,6 +9,7 @@ import glob
 import sys
 import subprocess
 import time
+
 if sys.version_info < (3, 3):
     from collections import Mapping
 else:
@@ -25,19 +26,31 @@ _NBFOLDER_BUILD = "jupyter_build"
 _API_KEY = "autodoc_package"
 _CFG_FILE_KEY = "config_file_path"
 
+
 class AutoDocumenter(BasePlugin):
-    """ Populate automatic documentation markdown. """
+    """Populate automatic documentation markdown."""
+
     config_scheme = (
         ("site_logo", mkdocs.config.config_options.Type(str)),
         ("pypi_name", mkdocs.config.config_options.Type(str)),
         ("jupyter_source", mkdocs.config.config_options.Type(str, default=_NBFOLDER)),
-        (_NBFOLDER_BUILD, mkdocs.config.config_options.Type(str, default=os.path.join(_NBFOLDER, "build"))),
+        (
+            _NBFOLDER_BUILD,
+            mkdocs.config.config_options.Type(
+                str, default=os.path.join(_NBFOLDER, "build")
+            ),
+        ),
         (_API_KEY, mkdocs.config.config_options.Type(str, default=None)),
         ("docstring_style", mkdocs.config.config_options.Type(str, default="rst")),
         ("no_top_level", mkdocs.config.config_options.Type(bool, default=False)),
         ("include_inherited", mkdocs.config.config_options.Type(bool, default=False)),
         ("autodoc_build", mkdocs.config.config_options.Type(str, default="docs_build")),
-        ("usage_template", mkdocs.config.config_options.Type(str, default=os.path.join("docs", "usage_template.md"))),
+        (
+            "usage_template",
+            mkdocs.config.config_options.Type(
+                str, default=os.path.join("docs", "usage_template.md")
+            ),
+        ),
         ("usage_cmds", mkdocs.config.config_options.Type((list, str), default=[])),
     )
 
@@ -47,20 +60,41 @@ class AutoDocumenter(BasePlugin):
         # This will allow them to be used in the final rendered HTML pages,
         # even though they are not in the primary docs_dir.
 
-        for nb in glob.glob(os.path.join(os.path.dirname(
-                config[_CFG_FILE_KEY]), self.config[_NBFOLDER_BUILD], "*.md")):
+        for nb in glob.glob(
+            os.path.join(
+                os.path.dirname(config[_CFG_FILE_KEY]),
+                self.config[_NBFOLDER_BUILD],
+                "*.md",
+            )
+        ):
             nb = os.path.relpath(nb, self.config[_NBFOLDER_BUILD])
             # print(nb, os.path.abspath(config[_NBFOLDER_BUILD]), config['site_dir'], config['use_directory_urls'])
-            files.append(mkdocs.structure.files.File(nb, os.path.abspath(self.config[_NBFOLDER_BUILD]), config['site_dir'], config['use_directory_urls']))
-            nbm = os.path.splitext(nb)[0] + '.ipynb'
+            files.append(
+                mkdocs.structure.files.File(
+                    nb,
+                    os.path.abspath(self.config[_NBFOLDER_BUILD]),
+                    config["site_dir"],
+                    config["use_directory_urls"],
+                )
+            )
+            nbm = os.path.splitext(nb)[0] + ".ipynb"
             # print(nbm, os.path.abspath(config["jupyter_source"]), config['site_dir'], config['use_directory_urls'])
             nb_path = os.path.join(os.path.abspath(self.config[_NBFOLDER_BUILD]), nb)
             nmb_path = os.path.join(os.path.abspath(self.config["jupyter_source"]), nbm)
-            if (os.path.exists(nmb_path)):
-            	files.append(mkdocs.structure.files.File(nbm, os.path.abspath(self.config["jupyter_source"]), config['site_dir'], config['use_directory_urls']))
+            if os.path.exists(nmb_path):
+                files.append(
+                    mkdocs.structure.files.File(
+                        nbm,
+                        os.path.abspath(self.config["jupyter_source"]),
+                        config["site_dir"],
+                        config["use_directory_urls"],
+                    )
+                )
             else:
-            	print(f'Erroneous output file found in built jupyter dir. Corresponding file does not exist: {nmb_path}')
-            	print(f'Fix with: `rm {nb_path}')
+                print(
+                    f"Erroneous output file found in built jupyter dir. Corresponding file does not exist: {nmb_path}"
+                )
+                print(f"Fix with: `rm {nb_path}")
 
         # for i in files:
         #     if os.path.dirname(i.src_path) != "jupyter":
@@ -72,7 +106,9 @@ class AutoDocumenter(BasePlugin):
         # Add the jupyter source files to the watchlist, so that changes
         # will trigger a rebuild of the docs in dev mode
 
-        inpath = os.path.join(os.path.dirname(config[_CFG_FILE_KEY]), self.config["jupyter_source"])
+        inpath = os.path.join(
+            os.path.dirname(config[_CFG_FILE_KEY]), self.config["jupyter_source"]
+        )
 
         for nb in glob.glob(os.path.join(inpath, "*.ipynb")):
             print("Add to watch: {}".format(nb))
@@ -85,7 +121,7 @@ class AutoDocumenter(BasePlugin):
         return server
 
     def on_pre_build(self, config):
-        """ Usage example notebook and API autodocumentation """
+        """Usage example notebook and API autodocumentation"""
         global TIMER
         # time.sleep(1)
         print("Running AutoDocumenter plugin version " + __version__)
@@ -97,7 +133,9 @@ class AutoDocumenter(BasePlugin):
         else:
             TIMER = time.time()
 
-        template = os.path.join(os.path.dirname(__file__), "templates/jupyter_markdown.tpl")
+        template = os.path.join(
+            os.path.dirname(__file__), "templates/jupyter_markdown.tpl"
+        )
         inpath = get_path_relative_to_config(config, self.config["jupyter_source"])
         outpath = get_path_relative_to_config(config, self.config[_NBFOLDER_BUILD])
 
@@ -105,29 +143,41 @@ class AutoDocumenter(BasePlugin):
         # so they can be styled differently with css
 
         for nb in glob.glob(os.path.join(inpath, "*.ipynb")):
-            output_markdown = "{od}/{notebooknox}.md".format(od=outpath, notebooknox=os.path.splitext(os.path.basename(nb))[0])
+            output_markdown = "{od}/{notebooknox}.md".format(
+                od=outpath, notebooknox=os.path.splitext(os.path.basename(nb))[0]
+            )
 
             # For some reason mkdocs doesn't like the traditional '---'
             # markdown metadata fences
-            with open(output_markdown, 'w') as file:
+            with open(output_markdown, "w") as file:
                 file.write("jupyter:True\n")
 
-            cmd = "jupyter nbconvert --to markdown" + \
-            " --template={tpl}".format(tpl=template) + \
-            " {notebook} --output-dir {od}".format(notebook=nb, od=outpath)
+            cmd = (
+                "jupyter nbconvert --to markdown"
+                + " --template={tpl}".format(tpl=template)
+                + " {notebook} --output-dir {od}".format(notebook=nb, od=outpath)
+            )
 
-            cmd = "jupyter nbconvert --to markdown" + \
-            " --template={tpl}".format(tpl=template) + \
-            " {notebook} --stdout | sed 's/\x1b\[[0-9;]*m//g' >> {od}/{notebooknox}.md".format(notebook=nb, od=outpath,
-             notebooknox=os.path.splitext(os.path.basename(nb))[0])
+            cmd = (
+                "jupyter nbconvert --to markdown"
+                + " --template={tpl}".format(tpl=template)
+                + " {notebook} --stdout | sed 's/\x1b\[[0-9;]*m//g' >> {od}/{notebooknox}.md".format(
+                    notebook=nb,
+                    od=outpath,
+                    notebooknox=os.path.splitext(os.path.basename(nb))[0],
+                )
+            )
 
             print(cmd)
             subprocess.call(cmd, shell=True)
 
-
-            files_folder = os.path.join(outpath, os.path.splitext(os.path.basename(nb))[0] + "_files")
+            files_folder = os.path.join(
+                outpath, os.path.splitext(os.path.basename(nb))[0] + "_files"
+            )
             print(files_folder)
-            target = os.path.join(os.path.dirname(outpath), os.path.basename(files_folder))
+            target = os.path.join(
+                os.path.dirname(outpath), os.path.basename(files_folder)
+            )
             if os.path.exists(files_folder) and not os.path.exists(target):
                 os.symlink(files_folder, target)
 
@@ -137,9 +187,11 @@ class AutoDocumenter(BasePlugin):
             args = (api_pkg, self.config["docstring_style"])
             kwargs = {
                 "no_mod_docstr": self.config["no_top_level"],
-                "include_inherited": self.config["include_inherited"]
+                "include_inherited": self.config["include_inherited"],
             }
-            outfolder = get_path_relative_to_config(config, self.config["autodoc_build"])
+            outfolder = get_path_relative_to_config(
+                config, self.config["autodoc_build"]
+            )
             try:
                 build_list = self.config["build_list"]
             except KeyError:
@@ -147,9 +199,12 @@ class AutoDocumenter(BasePlugin):
                 filename = self.config.get(outfile_keyname)
                 if filename:
                     if not isinstance(filename, str):
-                        msg = "Basename for autodoc output file isn't text; " \
-                              "got {} ({}) (from key '{}')".format(
-                            filename, type(filename), outfile_keyname)
+                        msg = (
+                            "Basename for autodoc output file isn't text; "
+                            "got {} ({}) (from key '{}')".format(
+                                filename, type(filename), outfile_keyname
+                            )
+                        )
                         raise TypeError(msg)
                 else:
                     filename = api_pkg + ".md"
@@ -164,7 +219,11 @@ class AutoDocumenter(BasePlugin):
             print("Writing API documentation for package {}".format(api_pkg))
             run_lucidoc(*args, **kwargs)
         else:
-            print("No package name declared for API autodocumentation (use '{}')".format(_API_KEY))
+            print(
+                "No package name declared for API autodocumentation (use '{}')".format(
+                    _API_KEY
+                )
+            )
 
 
 def get_path_relative_to_config(cfg, relpath):
