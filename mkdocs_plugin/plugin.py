@@ -17,6 +17,7 @@ import mkdocs
 from mkdocs.plugins import BasePlugin
 from mkdocs.commands.build import build
 from lucidoc import run_lucidoc
+from ._version import __version__
 
 TIMER = 0
 _NBFOLDER = "docs_jupyter"
@@ -53,7 +54,13 @@ class AutoDocumenter(BasePlugin):
             files.append(mkdocs.structure.files.File(nb, os.path.abspath(self.config[_NBFOLDER_BUILD]), config['site_dir'], config['use_directory_urls']))
             nbm = os.path.splitext(nb)[0] + '.ipynb'
             # print(nbm, os.path.abspath(config["jupyter_source"]), config['site_dir'], config['use_directory_urls'])
-            files.append(mkdocs.structure.files.File(nbm, os.path.abspath(self.config["jupyter_source"]), config['site_dir'], config['use_directory_urls']))
+            nb_path = os.path.join(os.path.abspath(self.config[_NBFOLDER_BUILD]), nb)
+            nmb_path = os.path.join(os.path.abspath(self.config["jupyter_source"]), nbm)
+            if (os.path.exists(nmb_path)):
+            	files.append(mkdocs.structure.files.File(nbm, os.path.abspath(self.config["jupyter_source"]), config['site_dir'], config['use_directory_urls']))
+            else:
+            	print(f'Erroneous output file found in built jupyter dir. Corresponding file does not exist: {nmb_path}')
+            	print(f'Fix with: `rm {nb_path}')
 
         # for i in files:
         #     if os.path.dirname(i.src_path) != "jupyter":
@@ -81,7 +88,7 @@ class AutoDocumenter(BasePlugin):
         """ Usage example notebook and API autodocumentation """
         global TIMER
         # time.sleep(1)
-        print("Running AutoDocumenter plugin")
+        print("Running AutoDocumenter plugin version " + __version__)
         if time.time() - TIMER < 5:
             print("Too fast")
             print(TIMER, time.time())
