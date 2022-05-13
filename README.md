@@ -1,6 +1,11 @@
 # MkDocs databio theme and plugin
 
-This repository contains the [mkdocs](http://mkdocs.org) theme and plugin for the [Sheffield lab](http://databio.org/). Installing this will give you access to both.
+This repository contains the [mkdocs](http://mkdocs.org) theme and plugin for the [Sheffield lab](http://databio.org/):
+
+- **Theme:** The theme is just a lab style so that all our documentation matches.
+- **Plugin:** The plugin is a mkdocs plugin that allows us to auto-document Python code using lucidoc, which produces markdown documentation that is naturally hosted by mkdocs.
+
+Installing this will give you access to both for your mkdocs repositories.
 
 ## Install
 
