@@ -2,7 +2,6 @@ lucidoc>=0.4.3
 mkdocs>=1.0
 jupyter
 peppy
-fontawesome-markdown
 pymdown-extensions
 nbconvert>=6.0.7
 logmuse>=0.2.7
